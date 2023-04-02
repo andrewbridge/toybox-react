@@ -47,9 +47,14 @@ function reconcile(parentDom, renderedVNode, vNode) {
         renderedVNode.componentInstance.props = vNode.props;
         const childVNode = renderedVNode.componentInstance.render();
         const oldChildRenderedVNode = renderedVNode.childRenderedVNodes[0];
+
+        if (childVNode === null) {
+            renderedVNode.componentInstance.componentWillUnmount();
+        }
+
         const childRenderedVNode = reconcile(parentDom, oldChildRenderedVNode, childVNode);
         
-        return Object.assign(renderedVNode, { dom: childRenderedVNode.dom, vNode, childRenderedVNodes: [childRenderedVNode] });
+        return Object.assign(renderedVNode, { dom: childRenderedVNode?.dom || null, vNode, childRenderedVNodes: [childRenderedVNode] });
     }
 }
 
@@ -61,11 +66,15 @@ function createComponentInstance(vNode, renderedVNode) {
     return componentInstance;
 }
 
-function updateComponentInstance(componentInstance) {
+function updateComponentInstance(componentInstance, previousState) {
+    const previousProps = componentInstance.props;
     const renderedVNode = componentInstance.__renderedVNode;
     const parentDom = renderedVNode.dom.parentNode;
     const vNode = renderedVNode.vNode;
-    reconcile(parentDom, renderedVNode, vNode);
+    const { dom } = reconcile(parentDom, renderedVNode, vNode);
+    if (dom !== null) {
+        componentInstance.componentDidUpdate(previousProps, previousState)
+    }
 }
 
 /**
@@ -82,6 +91,9 @@ function instantiate(vNode) {
         const componentInstance = createComponentInstance(vNode, renderedVNode);
         const childVNode = componentInstance.render();
         const childRenderedVNode = instantiate(childVNode);
+        if (childVNode !== null) {
+            componentInstance.componentDidMount();
+        }
 
         return Object.assign(renderedVNode, { dom: childRenderedVNode.dom, vNode, childRenderedVNodes: [childRenderedVNode], componentInstance });
     }

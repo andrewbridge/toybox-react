@@ -18,9 +18,16 @@ export class Component {
         this.state = this.state || {};
     }
 
+    componentDidMount() {}
+
+    componentDidUpdate(previousProps, previousState) {}
+
+    componentWillUnmount() {}
+
     setState(partialState) {
+        const previousState = this.state;
         this.state = Object.assign({}, this.state, partialState);
-        if (typeof this.__triggerUpdate === 'function') this.__triggerUpdate(this);
+        if (typeof this.__triggerUpdate === 'function') this.__triggerUpdate(this, previousState);
     }
 
     render() {}
@@ -60,7 +67,10 @@ export function createElement(type, props, ...children) {
         type,
         props: {
             ...mergedProps,
-            children: children.flat().map((child) => typeof child === 'object' ? child : createTextElement(child)),
+            children: children
+                .flat()
+                .filter((child) => child !== false && child !== null) // Ignore false and null children
+                .map((child) => typeof child === 'object' ? child : createTextElement(child)),
         }
     };
     

@@ -9,8 +9,23 @@ export class Counter extends React.Component {
         };
     }
 
+    componentDidMount() {
+        console.log('component mounted');
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('component updated', prevProps, prevState);
+    }
+
+    componentWillUnmount() {
+        console.log('component unmounting');
+    }
+
     render() {
         const { count } = this.state;
+
+        if (count >= 10) return null;
+
         return <div>
             <p>Count: {count}</p>
             <button onClick={() => this.setState({ count: count + 1 })}>Increment</button>
