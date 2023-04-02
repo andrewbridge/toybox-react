@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./types')} VNode
- * @typedef {{ dom: HTMLElement, vNode: VNode, childRenderedVNodes: Array<RenderedVNode> }} RenderedVNode
+ * @typedef {{ dom: HTMLElement, vNode: VNode, childRenderedVNodes: Array<RenderedVNode>, componentInstance?: InstanceType<Component> }} RenderedVNode
  * */
 
 import { TEXT_ELEMENT } from './react';
@@ -38,12 +38,34 @@ function reconcile(parentDom, renderedVNode, vNode) {
         // Remove a previously rendered element from the DOM
         parentDom.removeChild(renderedVNode.dom);
         return null;
-    } else {
+    } else if (typeof vNode.type === 'string') {
         // Replace a previously rendered element with a brand new DOM element
         const newRenderedVNode = instantiate(vNode);
         parentDom.replaceChild(newRenderedVNode.dom, renderedVNode.dom);
         return newRenderedVNode;
+    } else {
+        renderedVNode.componentInstance.props = vNode.props;
+        const childVNode = renderedVNode.componentInstance.render();
+        const oldChildRenderedVNode = renderedVNode.childRenderedVNodes[0];
+        const childRenderedVNode = reconcile(parentDom, oldChildRenderedVNode, childVNode);
+        
+        return Object.assign(renderedVNode, { dom: childRenderedVNode.dom, vNode, childRenderedVNodes: [childRenderedVNode] });
     }
+}
+
+function createComponentInstance(vNode, renderedVNode) {
+    const { type, props } = vNode;
+    const componentInstance = new type(props);
+    componentInstance.__renderedVNode = renderedVNode;
+    componentInstance.__triggerUpdate = updateComponentInstance;
+    return componentInstance;
+}
+
+function updateComponentInstance(componentInstance) {
+    const renderedVNode = componentInstance.__renderedVNode;
+    const parentDom = renderedVNode.dom.parentNode;
+    const vNode = renderedVNode.vNode;
+    reconcile(parentDom, renderedVNode, vNode);
 }
 
 /**
@@ -56,8 +78,12 @@ function instantiate(vNode) {
     const { type, props } = vNode;
 
     if (typeof type === 'function' && type.prototype?.isComponentClass === true) {
-        const componentInstance = new type();
-        return instantiate(componentInstance.render());
+        const renderedVNode = {};
+        const componentInstance = createComponentInstance(vNode, renderedVNode);
+        const childVNode = componentInstance.render();
+        const childRenderedVNode = instantiate(childVNode);
+
+        return Object.assign(renderedVNode, { dom: childRenderedVNode.dom, vNode, childRenderedVNodes: [childRenderedVNode], componentInstance });
     }
 
     const isTextElement = type === TEXT_ELEMENT;

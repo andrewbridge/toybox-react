@@ -1,17 +1,26 @@
 /** @typedef {import('./types')} VNode */
 
 /**
- * A Component encapsulates a stateful DOM element where the HTML element produced
+ * A Component encapsulates a stateful vDOM element where the vDOM element produced
  * is different depending on the state within.
  * 
- * Components are created with a `props` object to allow the HTML element to
+ * Components are created with a `props` object to allow the vDOM element to
  * have additional properties and attributes set to it.
  * 
- * Components produce an HTML element when its `render` function is called.
+ * Components produce a VNode element when its `render` function is called.
+ * 
+ * vDOM renderers can add a __triggerUpdate function to component instance to receive
+ * calls when internal state is updated.
  */
 export class Component {
     constructor(props) {
         this.props = props || {};
+        this.state = this.state || {};
+    }
+
+    setState(partialState) {
+        this.state = Object.assign({}, this.state, partialState);
+        if (typeof this.__triggerUpdate === 'function') this.__triggerUpdate(this);
     }
 
     render() {}
@@ -54,6 +63,6 @@ export function createElement(type, props, ...children) {
             children: children.flat().map((child) => typeof child === 'object' ? child : createTextElement(child)),
         }
     };
-    console.log(vNode);
+    
     return vNode;
 }
