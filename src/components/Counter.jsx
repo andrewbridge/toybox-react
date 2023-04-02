@@ -29,7 +29,7 @@ export class Counter extends React.Component {
         return <div className={Date.now()}>
             <p>Count: {count}</p>
             <button onClick={() => this.setState({ count: count + 1 })}>Increment</button>
-            <Toggle />
+            {count < 5 && <Toggle />}
         </div>
     }
 }

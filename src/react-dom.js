@@ -46,6 +46,7 @@ function reconcile(parentDom, renderedVNode, vNode) {
     } else if (typeof vNode.type === 'string') {
         // Update a previously rendere element from the DOM
         updateDomProperties(renderedVNode.dom, renderedVNode.vNode.props, vNode.props);
+        renderedVNode.childRenderedVNodes = reconcileChildren(renderedVNode, vNode);
         renderedVNode.vNode = vNode;
         return renderedVNode;
     } else {
@@ -61,6 +62,26 @@ function reconcile(parentDom, renderedVNode, vNode) {
         
         return Object.assign(renderedVNode, { dom: childRenderedVNode?.dom || null, vNode, childRenderedVNodes: [childRenderedVNode] });
     }
+}
+
+/**
+ * Compares two vNodes' child nodes to update and remove each node as necessary.
+ * 
+ * @param {RenderedVNode} renderedVNode The previously rendered vNode to compare with vNode
+ * @param {VNode} vNode The new vNode to compare with renderedVNode
+ */
+function reconcileChildren(renderedVNode, vNode) {
+    const { dom, childRenderedVNodes } = renderedVNode;
+    const nextChildVNodes = vNode.props.children;
+    const newChildRenderedVNodes = [];
+    const count = Math.max(childRenderedVNodes.length, nextChildVNodes.length);
+    for (let i = 0; i < count; i++) {
+        const childRenderedVNode = childRenderedVNodes[i] || null;
+        const childVNode = nextChildVNodes[i] || null;
+        const newChildRenderedVNode = reconcile(dom, childRenderedVNode, childVNode);
+        newChildRenderedVNodes.push(newChildRenderedVNode);
+    }
+    return newChildRenderedVNodes;
 }
 
 /**
