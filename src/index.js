@@ -1,19 +1,24 @@
-const helloWorld = document.createElement('h1');
-helloWorld.textContent = 'Hello, World!';
+function createElement(type, props) {
+    const element = document.createElement(type);
+    Object.keys(props).forEach((name) => {
+        element[name] = props[name];
+    });
+    return element;
+}
 
-document.getElementById('root').appendChild(helloWorld);
+function render(element, parentNode) {
+    parentNode.appendChild(element);
+}
+
+const helloWorld = createElement('h1', { textContent: 'Hello, World!' });
 
 let count = 0;
-const countDisplay = document.createElement('p');
-countDisplay.textContent = `Count: ${count}`;
+const countDisplay = createElement('p', { textContent: `Count: ${count}` });
 
-document.getElementById('root').appendChild(countDisplay);
-
-const countIncrementButton = document.createElement('button');
-countIncrementButton.textContent = 'Increment';
+const countIncrementButton = createElement('button', { textContent: 'Increment' });
 countIncrementButton.addEventListener('click', () => {
     count++;
     countDisplay.textContent = `Count: ${count}`;
 }, false);
 
-document.getElementById('root').appendChild(countIncrementButton);
+[helloWorld, countDisplay, countIncrementButton].forEach((element) => render(element, document.getElementById('root')));
