@@ -34,17 +34,44 @@ function render(element, parentNode) {
     parentNode.appendChild(element);
 }
 
+/**
+ * 
+ */
+class Component {
+    constructor(props) {
+        this.props = props || {};
+    }
+
+    render() {}
+}
+
+class Counter extends Component {
+    count = 0;
+
+    render() {
+        const rootElement = createElement('div', this.props);
+
+        const countDisplay = createElement('p', { textContent: `Count: ${this.count}` });
+
+        const countIncrementButton = createElement('button', {
+            textContent: 'Increment',
+            onClick: () => {
+                this.count++;
+                countDisplay.textContent = `Count: ${this.count}`;
+            }
+        });
+
+        // Note that we could use our global render function,
+        // but to save confusion with this class' render function, I've appended directly
+        rootElement.appendChild(countDisplay);
+        rootElement.appendChild(countIncrementButton);
+
+        return rootElement;
+    }
+}
+
 const helloWorld = createElement('h1', { textContent: 'Hello, World!' });
 
-let count = 0;
-const countDisplay = createElement('p', { textContent: `Count: ${count}` });
+const counter = new Counter();
 
-const countIncrementButton = createElement('button', {
-    textContent: 'Increment',
-    onClick: () => {
-        count++;
-        countDisplay.textContent = `Count: ${count}`;
-    }
-});
-
-[helloWorld, countDisplay, countIncrementButton].forEach((element) => render(element, document.getElementById('root')));
+[helloWorld, counter.render()].forEach((element) => render(element, document.getElementById('root')));
