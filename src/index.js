@@ -35,7 +35,13 @@ function render(element, parentNode) {
 }
 
 /**
+ * A Component encapsulates a stateful DOM element where the HTML element produced
+ * is different depending on the state within.
  * 
+ * Components are created with a `props` object to allow the HTML element to
+ * have additional properties and attributes set to it.
+ * 
+ * Components produce an HTML element when its `render` function is called.
  */
 class Component {
     constructor(props) {
