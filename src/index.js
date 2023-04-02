@@ -3,7 +3,7 @@
  * 
  * Properties given to `props` with the prefix "on" will be treated as element event
  * listeners.
- * @param {string | Component} type The type of DOM element or Component class to create
+ * @param {string | Component | Function} type The type of DOM element, Component class, or function component to create
  * @param {{ [key: string]: string | Function}} props The properties of the DOM element
  * @returns {HTMLElement}
  */
