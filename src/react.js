@@ -19,7 +19,7 @@ export class Component {
 // Every single component will have a property `isComponentClass` so we can detect them compared to other objects
 Component.prototype.isComponentClass = true;
 
-const TEXT_ELEMENT = 'TEXT_ELEMENT';
+export const TEXT_ELEMENT = 'TEXT_ELEMENT';
 
 /**
  * createTextElement returns a VNode for a primitive child like a string or number.
