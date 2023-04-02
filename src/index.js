@@ -3,12 +3,18 @@
  * 
  * Properties given to `props` with the prefix "on" will be treated as element event
  * listeners.
- * @param {string} type The type of DOM element to create
+ * @param {string | Component} type The type of DOM element or Component class to create
  * @param {{ [key: string]: string | Function}} props The properties of the DOM element
  * @returns {HTMLElement}
  */
 function createElement(type, props) {
-    const element = document.createElement(type);
+    let element;
+    if (typeof type === 'function' && type.prototype?.isComponentClass === true) {
+        const componentInstance = new type();
+        element = componentInstance.render();
+    } else {
+        element = document.createElement(type);
+    }
 
     const isEvent = (name) => name.startsWith('on');
     const isAttribute = (name) => !isEvent(name);
@@ -50,6 +56,8 @@ class Component {
 
     render() {}
 }
+// Every single component will have a property `isComponentClass` so we can detect them compared to other objects
+Component.prototype.isComponentClass = true;
 
 class Counter extends Component {
     count = 0;
@@ -78,7 +86,7 @@ class Counter extends Component {
 
 const helloWorld = createElement('h1', { textContent: 'Hello, World!' });
 
-const counter1 = new Counter();
-const counter2 = new Counter();
+const counter1 = createElement(Counter, {});
+const counter2 = createElement(Counter, {});
 
-[helloWorld, counter1.render(), counter2.render()].forEach((element) => render(element, document.getElementById('root')));
+[helloWorld, counter1, counter2].forEach((element) => render(element, document.getElementById('root')));
