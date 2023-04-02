@@ -1,0 +1,1 @@
+export type VNode = { type: string | Component, props: { [key: string]: string | Function, children: Array<VNode> }};

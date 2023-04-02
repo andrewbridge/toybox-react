@@ -1,3 +1,5 @@
+/** @typedef {import('./types')} VNode */
+
 /**
  * A Component encapsulates a stateful DOM element where the HTML element produced
  * is different depending on the state within.
@@ -16,8 +18,6 @@ export class Component {
 }
 // Every single component will have a property `isComponentClass` so we can detect them compared to other objects
 Component.prototype.isComponentClass = true;
-
-/** @typedef {{ type: string | Component, props: { [key: string]: string | Function, children: Array<VNode> }}} VNode */
 
 const TEXT_ELEMENT = 'TEXT_ELEMENT';
 
@@ -56,13 +56,4 @@ export function createElement(type, props, ...children) {
     };
     console.log(vNode);
     return vNode;
-}
-
-/**
- * Renders a DOM element in the given parentNode (also a DOM element)
- * @param {HTMLElement} element The element to render
- * @param {HTMLElement} parentNode The node to attach `element` to
- */
-export function render(element, parentNode) {
-    parentNode.appendChild(element);
 }
