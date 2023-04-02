@@ -58,6 +58,14 @@ function reconcile(parentDom, renderedVNode, vNode) {
     }
 }
 
+/**
+ * Creates a new instance of a class component and attaches ReactDOM data and hooks
+ * to the instance.
+ * 
+ * @param {VNode} vNode The vNode to create a component instance for.
+ * @param {RenderedVNode} renderedVNode A reference to the rendered vNode to allow access via the instance.
+ * @returns {InstanceType<Component>}
+ */
 function createComponentInstance(vNode, renderedVNode) {
     const { type, props } = vNode;
     const componentInstance = new type(props);
@@ -66,6 +74,12 @@ function createComponentInstance(vNode, renderedVNode) {
     return componentInstance;
 }
 
+/**
+ * Handles re-rendering an existing component instance following an update to the instance.
+ * 
+ * @param {InstanceType<Component>} componentInstance 
+ * @param {{ [key: string]: unknown }} previousState 
+ */
 function updateComponentInstance(componentInstance, previousState) {
     const previousProps = componentInstance.props;
     const renderedVNode = componentInstance.__renderedVNode;
