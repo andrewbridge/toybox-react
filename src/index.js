@@ -5,9 +5,10 @@
  * listeners.
  * @param {string | Component | Function} type The type of DOM element, Component class, or function component to create
  * @param {{ [key: string]: string | Function}} props The properties of the DOM element
+ * @param {Array<HTMLElement>} children The child HTML Elements to be nested within the component
  * @returns {HTMLElement}
  */
-function createElement(type, props) {
+function createElement(type, props, ...children) {
     let element;
     if (typeof type === 'function' && type.prototype?.isComponentClass === true) {
         const componentInstance = new type();
@@ -29,6 +30,8 @@ function createElement(type, props) {
         const eventType = name.toLowerCase().substring(2);
         element.addEventListener(eventType, props[name], false);
     });
+
+    children.flat().forEach((child) => element.appendChild(child));
 
     return element;
 }
@@ -65,8 +68,6 @@ class Counter extends Component {
     count = 0;
 
     render() {
-        const rootElement = createElement('div', this.props);
-
         const countDisplay = createElement('p', { textContent: `Count: ${this.count}` });
 
         const countIncrementButton = createElement('button', {
@@ -77,23 +78,17 @@ class Counter extends Component {
             }
         });
 
-        // Note that we could use our global render function,
-        // but to save confusion with this class' render function, I've appended directly
-        rootElement.appendChild(countDisplay);
-        rootElement.appendChild(countIncrementButton);
-
-        return rootElement;
+        return createElement('div', this.props, [
+            countDisplay,
+            countIncrementButton
+        ]);
     }
 }
 
-const App = (props) => {
-    const rootElement = createElement('div', props);
-    [
-        createElement('h1', { textContent: 'Hello, World!' }),
-        createElement(Counter, {})
-    ].forEach((element) => render(element, rootElement));
-    return rootElement;
-}
+const App = (props) => createElement('div', props, [
+    createElement('h1', { textContent: 'Hello, World!' }),
+    createElement(Counter, {})
+]);
 
 const app = createElement(App, {});
 
