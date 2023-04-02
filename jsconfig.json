@@ -3,4 +3,4 @@
       "jsx": "react",
       "jsxFactory": "React.createElement"
     }
-  }
+}
