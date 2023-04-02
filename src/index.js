@@ -72,6 +72,7 @@ class Counter extends Component {
 
 const helloWorld = createElement('h1', { textContent: 'Hello, World!' });
 
-const counter = new Counter();
+const counter1 = new Counter();
+const counter2 = new Counter();
 
-[helloWorld, counter.render()].forEach((element) => render(element, document.getElementById('root')));
+[helloWorld, counter1.render(), counter2.render()].forEach((element) => render(element, document.getElementById('root')));
