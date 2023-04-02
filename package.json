@@ -1,0 +1,24 @@
+{
+  "name": "toybox-react",
+  "version": "0.0.1",
+  "description": "A demonstration repo to build a React like vDOM framework from scratch with a class component first approach (a la React <16).",
+  "source": "src/index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewbridge/toybox-react.git"
+  },
+  "author": "Andrew Bridge <andrew@andrewhbridge.co.uk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andrewbridge/toybox-react/issues"
+  },
+  "homepage": "https://github.com/andrewbridge/toybox-react#readme",
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}
