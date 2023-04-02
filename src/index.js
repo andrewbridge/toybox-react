@@ -1,3 +1,12 @@
+/**
+ * createElement returns a new DOM element based on the type and properties provided
+ * 
+ * Properties given to `props` with the prefix "on" will be treated as element event
+ * listeners.
+ * @param {string} type The type of DOM element to create
+ * @param {{ [key: string]: string | Function}} props The properties of the DOM element
+ * @returns {HTMLElement}
+ */
 function createElement(type, props) {
     const element = document.createElement(type);
 
@@ -16,6 +25,11 @@ function createElement(type, props) {
     return element;
 }
 
+/**
+ * Renders a DOM element in the given parentNode (also a DOM element)
+ * @param {HTMLElement} element The element to render
+ * @param {HTMLElement} parentNode The node to attach `element` to
+ */
 function render(element, parentNode) {
     parentNode.appendChild(element);
 }
