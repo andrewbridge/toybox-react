@@ -12,6 +12,8 @@ function createElement(type, props) {
     if (typeof type === 'function' && type.prototype?.isComponentClass === true) {
         const componentInstance = new type();
         element = componentInstance.render();
+    } else if (typeof type === 'function') {
+        element = type(props);
     } else {
         element = document.createElement(type);
     }
@@ -84,9 +86,15 @@ class Counter extends Component {
     }
 }
 
-const helloWorld = createElement('h1', { textContent: 'Hello, World!' });
+const App = (props) => {
+    const rootElement = createElement('div', props);
+    [
+        createElement('h1', { textContent: 'Hello, World!' }),
+        createElement(Counter, {})
+    ].forEach((element) => render(element, rootElement));
+    return rootElement;
+}
 
-const counter1 = createElement(Counter, {});
-const counter2 = createElement(Counter, {});
+const app = createElement(App, {});
 
-[helloWorld, counter1, counter2].forEach((element) => render(element, document.getElementById('root')));
+render(app, document.getElementById('root'));
