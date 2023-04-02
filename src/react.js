@@ -17,14 +17,24 @@ export class Component {
 // Every single component will have a property `isComponentClass` so we can detect them compared to other objects
 Component.prototype.isComponentClass = true;
 
-const createTextElement = (value) => document.createTextNode(value);
+/** @typedef {{ type: string | Component, props: { [key: string]: string | Function, children: Array<VNode> }}} VNode */
+
+const TEXT_ELEMENT = 'TEXT_ELEMENT';
+
+/**
+ * createTextElement returns a VNode for a primitive child like a string or number.
+ * 
+ * @param {string | number} value The value the VNode will contain
+ * @returns {VNode}
+ */
+const createTextElement = (value) => createElement(TEXT_ELEMENT, { nodeValue: value });
 
 /**
  * createElement returns a new vDOM element based on the type and properties provided
  * 
  * Properties given to `props` with the prefix "on" will be treated as element event
  * listeners.
- * @typedef {{ type: string | Component, props: { [key: string]: string | Function, children: Array<VNode> }}} VNode
+ * 
  * @param {string | Component | Function} type The type of vDOM element, Component class, or function component to create
  * @param {{ [key: string]: string | Function}} props The properties of the vDOM element
  * @param {Array<VNode | string | number>} children The child vDOM Elements to be nested within the component
