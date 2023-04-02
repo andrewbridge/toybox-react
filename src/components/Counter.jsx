@@ -1,4 +1,5 @@
 import * as React from "../react";
+import { Toggle } from "./Toggle";
 
 export class Counter extends React.Component {
     count = 0;
@@ -14,6 +15,7 @@ export class Counter extends React.Component {
         return <div>
             {countDisplay}
             {countIncrementButton}
+            <Toggle />
         </div>
     }
 }
