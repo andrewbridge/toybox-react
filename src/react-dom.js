@@ -38,11 +38,16 @@ function reconcile(parentDom, renderedVNode, vNode) {
         // Remove a previously rendered element from the DOM
         parentDom.removeChild(renderedVNode.dom);
         return null;
-    } else if (typeof vNode.type === 'string') {
+    } else if (renderedVNode.vNode.type !== vNode.type) {
         // Replace a previously rendered element with a brand new DOM element
         const newRenderedVNode = instantiate(vNode);
         parentDom.replaceChild(newRenderedVNode.dom, renderedVNode.dom);
         return newRenderedVNode;
+    } else if (typeof vNode.type === 'string') {
+        // Update a previously rendere element from the DOM
+        updateDomProperties(renderedVNode.dom, renderedVNode.vNode.props, vNode.props);
+        renderedVNode.vNode = vNode;
+        return renderedVNode;
     } else {
         renderedVNode.componentInstance.props = vNode.props;
         const childVNode = renderedVNode.componentInstance.render();
@@ -115,17 +120,7 @@ function instantiate(vNode) {
     const isTextElement = type === TEXT_ELEMENT;
     const dom = isTextElement ? document.createTextNode(props.nodeValue) : document.createElement(type)
 
-    const isEvent = (name) => name.startsWith('on');
-    const isAttribute = (name) => !isEvent(name);
-
-    Object.keys(props).filter(isAttribute).forEach((name) => {
-        dom[name] = props[name];
-    });
-
-    Object.keys(props).filter(isEvent).forEach((name) => {
-        const eventType = name.toLowerCase().substring(2);
-        dom.addEventListener(eventType, props[name], false);
-    });
+    updateDomProperties(dom, null, props);
 
     /** @type {Array<RenderedVNode>} */
     const childRenderedVNodes = props.children.map(instantiate);
@@ -134,4 +129,31 @@ function instantiate(vNode) {
     });
 
     return { dom, vNode, childRenderedVNodes };
+}
+
+function updateDomProperties(dom, prevProps, nextProps) {
+    const isEvent = (name) => name.startsWith('on');
+    const isAttribute = (name) => !isEvent(name);
+
+    if (prevProps !== null) {
+        // Remove event listeners
+        Object.keys(prevProps).filter(isEvent).forEach(name => {
+            const eventType = name.toLowerCase().substring(2);
+            dom.removeEventListener(eventType, prevProps[name]);
+        });
+
+        // Remove attributes
+        Object.keys(prevProps).filter(isAttribute).forEach(name => {
+            dom[name] = null;
+        });
+    }
+
+    Object.keys(nextProps).filter(isAttribute).forEach((name) => {
+        dom[name] = nextProps[name];
+    });
+
+    Object.keys(nextProps).filter(isEvent).forEach((name) => {
+        const eventType = name.toLowerCase().substring(2);
+        dom.addEventListener(eventType, nextProps[name], false);
+    });
 }

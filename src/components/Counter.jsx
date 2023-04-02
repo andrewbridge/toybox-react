@@ -26,7 +26,7 @@ export class Counter extends React.Component {
 
         if (count >= 10) return null;
 
-        return <div>
+        return <div className={Date.now()}>
             <p>Count: {count}</p>
             <button onClick={() => this.setState({ count: count + 1 })}>Increment</button>
             <Toggle />
