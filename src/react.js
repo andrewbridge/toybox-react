@@ -17,6 +17,8 @@ export class Component {
 // Every single component will have a property `isComponentClass` so we can detect them compared to other objects
 Component.prototype.isComponentClass = true;
 
+const createTextElement = (value) => document.createTextNode(value);
+
 /**
  * createElement returns a new DOM element based on the type and properties provided
  * 
@@ -50,7 +52,13 @@ export function createElement(type, props, ...children) {
         element.addEventListener(eventType, props[name], false);
     });
 
-    children.flat().forEach((child) => element.appendChild(child));
+    children.flat().forEach((child) => {
+        let domElement = child;
+        if (typeof child !== 'object') {
+            domElement = createTextElement(child);
+        }
+        element.appendChild(domElement);
+    });
 
     return element;
 }

@@ -4,12 +4,12 @@ export class Counter extends React.Component {
     count = 0;
 
     render() {
-        const countDisplay = <p textContent={`Count: ${this.count}`} />;
+        const countDisplay = <p>Count: {this.count}</p>;
 
         const countIncrementButton = <button onClick={() => {
             this.count++;
             countDisplay.textContent = `Count: ${this.count}`;
-        }} textContent="Increment" />;
+        }}>Increment</button>;
 
         return <div>
             {countDisplay}
