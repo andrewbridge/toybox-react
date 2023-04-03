@@ -66,7 +66,7 @@ In doing so, each change has a clear need, and nearly every commit renders somet
 
 Given that hooks are now a widely used pattern in React and many other DOM libraries, it could seem counter-intuitive to learn the inner workings of what some would consider an "archaic" concept in React.
 
-However, hooks are an additional construct on top of all the others which React has introduced over the years. When they were first released into the library, many developers found the difficult to understand. Coming from the 2010 web developer perspective, it seemed far simpler to integrate a known entity like a class in my first iteration (which is probably _exactly_ why they were initially used by React).
+However, hooks are an additional construct on top of all the others which React has introduced over the years. When they were first released into the library, many developers found them difficult to understand. Coming from the 2010 web developer perspective, it seemed far simpler to integrate a known entity like a class in my first iteration (which is probably _exactly_ why they were initially used by React).
 
 Much of my work still also relies on class components, regardless of what the new wisdom says, understanding these directly benefits my day to day work.
 
