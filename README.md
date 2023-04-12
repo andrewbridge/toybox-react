@@ -48,6 +48,20 @@ npm run start
 
 The page will be served on http://localhost:1234/.
 
+### Stepping through tags
+
+Start by checking out the first tag:
+
+```bash
+git checkout tags/00-initial-commit
+```
+
+You can then step through each tag in sequence. To make this easier, I've produced a separate package that can do this, which can be run via `npx`
+
+```bash
+npx checkout-next-tag
+```
+
 ## Motivation
 
 This kind of project has been done many times before, notably:
